@@ -1,6 +1,8 @@
 ﻿using Application.Notes.Commands.CreateNote;
 using Application.Notes.Commands.UpdateNote;
+using Application.Notes.Queries.GetAll;
 using AutoMapper;
+using Data.ViewModels;
 
 namespace Api.Models.Mappings
 {
@@ -21,6 +23,8 @@ namespace Api.Models.Mappings
 					opt => opt.MapFrom(vm => vm.Title))
 				.ForMember(command => command.Details,
 					opt => opt.MapFrom(vm => vm.Details));
+
+			CreateMap<GetAllNotesResponse, GetAllNoteViewModel>();
 		}
 	}
 }

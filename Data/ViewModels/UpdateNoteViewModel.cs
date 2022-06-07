@@ -1,4 +1,4 @@
-﻿namespace Api.Models
+﻿namespace Data.ViewModels
 {
 	public class UpdateNoteViewModel
 	{
