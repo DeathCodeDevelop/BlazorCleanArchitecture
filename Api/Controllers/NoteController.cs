@@ -7,20 +7,25 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Api.Models;
+using Data.ViewModels;
 
 namespace Api.Controllers
 {
 	[ApiController]
-	[Route("[controller]/[action]")]
+	[Route("api/[controller]/[action]")]
 	public class NoteController : BaseController
 	{
 		[HttpGet]
-		public async Task<ActionResult<GetAllNotesResponse>> GetAll() 
+		public async Task<ActionResult<IEnumerable<GetAllNoteViewModel>>> GetAll() 
 		{
 			var query = new GetAllNotesQuery() { UserId = UserId };
 
 			var response = await mediator.Send(query);
-			return Ok(response);
+
+			if (response != null)
+				return Ok(mapper.Map<IEnumerable<GetAllNotesResponse>, IEnumerable<GetAllNoteViewModel>>(response));
+
+			return Ok(null);
 		}
 
 		[HttpGet]
@@ -29,7 +34,7 @@ namespace Api.Controllers
 			var query = new GetNoteDetailsQuery() 
 			{ 
 				Id = id,
-				UserId = UserId 
+				UserId = UserId
 			};
 
 			var response = await mediator.Send(query);

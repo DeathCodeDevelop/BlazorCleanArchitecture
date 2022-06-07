@@ -6,7 +6,7 @@ using System.Security.Claims;
 namespace Api.Controllers
 {
 	[ApiController]
-	[Route("[controller]/[action]")]
+	[Route("api/[controller]/[action]")]
 	public abstract class BaseController : ControllerBase
 	{
 		private IMediator _mediator = null!;
