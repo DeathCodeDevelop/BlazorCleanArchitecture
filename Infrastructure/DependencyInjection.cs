@@ -4,22 +4,21 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Infrastructure
+namespace Infrastructure;
+
+public static class DependencyInjection
 {
-	public static class DependencyInjection
+	public static IServiceCollection AddInfrastructure(this IServiceCollection
+		services, string connectionString)
 	{
-		public static IServiceCollection AddInfrastructure(this IServiceCollection
-			services, string connectionString)
+		services.AddDbContext<ApplicationDbContext>(options =>
 		{
-			services.AddDbContext<ApplicationDbContext>(options =>
-			{
-				options.UseSqlite(connectionString);
-			});
+			options.UseSqlite(connectionString);
+		});
 
-			services.AddScoped<IApplicationDbContext>(provider =>
-				provider.GetService<ApplicationDbContext>());
+		services.AddScoped<IApplicationDbContext>(provider =>
+			provider.GetService<ApplicationDbContext>());
 
-			return services;
-		}
+		return services;
 	}
 }
