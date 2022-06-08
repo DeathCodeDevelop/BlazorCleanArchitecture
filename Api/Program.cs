@@ -1,3 +1,4 @@
+using Api.Middleware;
 using Application;
 using Infrastructure;
 using Infrastructure.Contexts;
@@ -28,6 +29,8 @@ if (app.Environment.IsDevelopment())
 	});
 }
 
+app.UseCusomExceptionHandler();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 

@@ -6,8 +6,8 @@ public class GetAllNotesQueryValidator : AbstractValidator<GetAllNotesQuery>
 {
 	public GetAllNotesQueryValidator()
 	{
-		RuleFor(query =>
-			query.UserId).NotEqual(Guid.Empty);
+		//RuleFor(query =>
+		//	query.UserId).NotEqual(Guid.Empty);
 	}
 }
 
