@@ -8,6 +8,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Api.Models;
 using Data.ViewModels;
+using Application.Notes.Commands.Exeptions;
 
 namespace Api.Controllers
 {
@@ -25,20 +26,30 @@ namespace Api.Controllers
 			if (response != null)
 				return Ok(mapper.Map<IEnumerable<GetAllNotesResponse>, IEnumerable<GetAllNoteViewModel>>(response));
 
-			return Ok(null);
+			return NotFound(null);
 		}
 
 		[HttpGet]
 		public async Task<ActionResult<GetNoteDetailsResponse>> GetById(Guid id)
 		{
-			var query = new GetNoteDetailsQuery() 
-			{ 
-				Id = id,
-				UserId = UserId
-			};
+			try
+			{
+				var query = new GetNoteDetailsQuery()
+				{
+					Id = id,
+					UserId = UserId
+				};
 
-			var response = await mediator.Send(query);
-			return Ok(response);
+				var response = await mediator.Send(query);
+				return Ok(response);
+			}
+			catch (Exception ex) 
+			{
+				if (ex is NotFoundException)
+					return NotFound(id);
+			}
+
+			return NoContent();
 		}
 
 		[HttpPost]
@@ -55,24 +66,43 @@ namespace Api.Controllers
 		[HttpPut]
 		public async Task<IActionResult> Update(UpdateNoteViewModel model)
 		{
-			var command = mapper.Map<UpdateNoteViewModel, UpdateNoteCommand>(model);
-			command.UserId = UserId;
-			await mediator.Send(command);
-			
+			try 
+			{
+				var command = mapper.Map<UpdateNoteViewModel, UpdateNoteCommand>(model);
+				command.UserId = UserId;
+				await mediator.Send(command);
+			}
+			catch (Exception ex)
+			{
+				if (ex is NotFoundException)
+					return NotFound(model);
+			}
+
 			return NoContent();
 		}
 
 		[HttpDelete("{id}")]
 		public async Task<ActionResult<Guid>> Delete(Guid id)
 		{
-			var command = new DeleteNoteCommand()
+			try 
 			{
-				Id = id,
-				UserId = UserId
-			};
+				var command = new DeleteNoteCommand()
+				{
+					Id = id,
+					UserId = UserId
+				};
 
-			var response = await mediator.Send(command);
-			return Ok(response);
+				var response = await mediator.Send(command);
+
+				return Ok(response);
+			}
+			catch (Exception ex)
+			{
+				if (ex is NotFoundException)
+					return NotFound(id);
+			}
+
+			return NoContent();
 		}
 	}
 }
