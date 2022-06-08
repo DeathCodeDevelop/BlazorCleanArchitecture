@@ -13,4 +13,3 @@ public class NoteConfiguration : IEntityTypeConfiguration<Note>
 		builder.Property(note => note.Title).HasMaxLength(32);
 	}
 }
-

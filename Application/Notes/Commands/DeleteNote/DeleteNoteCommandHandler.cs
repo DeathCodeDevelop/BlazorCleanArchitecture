@@ -1,8 +1,7 @@
 ﻿using MediatR;
 using Domain.Entities;
 using Application.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Application.Notes.Commands.Exeptions;
+using Application.Common.Exceptions;
 
 namespace Application.Notes.Commands.DeleteNote;
 

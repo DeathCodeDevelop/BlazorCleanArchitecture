@@ -9,4 +9,3 @@ public static class DbInitializer
 		context.Database.EnsureCreated();
 	}
 }
-

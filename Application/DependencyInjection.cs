@@ -4,17 +4,17 @@ using System.Reflection;
 using Application.Common.Mappings;
 using AutoMapper;
 
-namespace Application
-{
-	public static class DependencyInjection
-	{
-		public static IServiceCollection AddApplication(this IServiceCollection
-			services)
-		{
-			services.AddAutoMapper(Assembly.GetExecutingAssembly());
-			services.AddMediatR(Assembly.GetExecutingAssembly());
+namespace Application;
 
-			return services;
-		}
+public static class DependencyInjection
+{
+	public static IServiceCollection AddApplication(this IServiceCollection
+		services)
+	{
+		services.AddAutoMapper(Assembly.GetExecutingAssembly());
+		services.AddMediatR(Assembly.GetExecutingAssembly());
+
+		return services;
 	}
 }
+

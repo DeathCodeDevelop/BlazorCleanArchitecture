@@ -1,8 +1,7 @@
-﻿namespace Data.ViewModels
+﻿namespace Data.ViewModels;
+
+public class CreateNoteViewModel
 {
-	public class CreateNoteViewModel
-	{
-		public string Title { get; set; }
-		public string Details { get; set; }
-	}
+	public string Title { get; set; }
+	public string Details { get; set; }
 }
