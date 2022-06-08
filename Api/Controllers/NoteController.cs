@@ -17,7 +17,7 @@ namespace Api.Controllers
 	public class NoteController : BaseController
 	{
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<GetAllNoteViewModel>>> GetAll() 
+		public async Task<ActionResult<IEnumerable<GetAllNoteViewModel>>> GetAll()
 		{
 			var query = new GetAllNotesQuery() { UserId = UserId };
 
@@ -32,28 +32,18 @@ namespace Api.Controllers
 		[HttpGet]
 		public async Task<ActionResult<GetNoteDetailsResponse>> GetById(Guid id)
 		{
-			try
+			var query = new GetNoteDetailsQuery()
 			{
-				var query = new GetNoteDetailsQuery()
-				{
-					Id = id,
-					UserId = UserId
-				};
+				Id = id,
+				UserId = UserId
+			};
 
-				var response = await mediator.Send(query);
-				return Ok(response);
-			}
-			catch (Exception ex) 
-			{
-				if (ex is NotFoundException)
-					return NotFound(id);
-			}
-
-			return NoContent();
+			var response = await mediator.Send(query);
+			return Ok(response);
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<Guid>> Create(CreateNoteViewModel model) 
+		public async Task<ActionResult<Guid>> Create(CreateNoteViewModel model)
 		{
 			var command = mapper.Map<CreateNoteViewModel, CreateNoteCommand>(model);
 			command.UserId = UserId;
@@ -66,17 +56,10 @@ namespace Api.Controllers
 		[HttpPut]
 		public async Task<IActionResult> Update(UpdateNoteViewModel model)
 		{
-			try 
-			{
-				var command = mapper.Map<UpdateNoteViewModel, UpdateNoteCommand>(model);
-				command.UserId = UserId;
-				await mediator.Send(command);
-			}
-			catch (Exception ex)
-			{
-				if (ex is NotFoundException)
-					return NotFound(model);
-			}
+
+			var command = mapper.Map<UpdateNoteViewModel, UpdateNoteCommand>(model);
+			command.UserId = UserId;
+			await mediator.Send(command);
 
 			return NoContent();
 		}
@@ -84,25 +67,15 @@ namespace Api.Controllers
 		[HttpDelete("{id}")]
 		public async Task<ActionResult<Guid>> Delete(Guid id)
 		{
-			try 
+			var command = new DeleteNoteCommand()
 			{
-				var command = new DeleteNoteCommand()
-				{
-					Id = id,
-					UserId = UserId
-				};
+				Id = id,
+				UserId = UserId
+			};
 
-				var response = await mediator.Send(command);
+			var response = await mediator.Send(command);
 
-				return Ok(response);
-			}
-			catch (Exception ex)
-			{
-				if (ex is NotFoundException)
-					return NotFound(id);
-			}
-
-			return NoContent();
+			return Ok(response);
 		}
 	}
 }
