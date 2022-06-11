@@ -7,29 +7,35 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Api.Models;
+using Data.ViewModels;
+using Application.Common.Exceptions;
 
 namespace Api.Controllers
 {
 	[ApiController]
-	[Route("[controller]/[action]")]
+	[Route("api/[controller]/[action]")]
 	public class NoteController : BaseController
 	{
 		[HttpGet]
-		public async Task<ActionResult<GetAllNotesResponse>> GetAll() 
+		public async Task<ActionResult<IEnumerable<GetAllNoteViewModel>>> GetAll()
 		{
 			var query = new GetAllNotesQuery() { UserId = UserId };
 
 			var response = await mediator.Send(query);
-			return Ok(response);
+
+			if (response != null)
+				return Ok(mapper.Map<IEnumerable<GetAllNotesResponse>, IEnumerable<GetAllNoteViewModel>>(response));
+
+			return NotFound(null);
 		}
 
 		[HttpGet]
 		public async Task<ActionResult<GetNoteDetailsResponse>> GetById(Guid id)
 		{
-			var query = new GetNoteDetailsQuery() 
-			{ 
+			var query = new GetNoteDetailsQuery()
+			{
 				Id = id,
-				UserId = UserId 
+				UserId = UserId
 			};
 
 			var response = await mediator.Send(query);
@@ -37,7 +43,7 @@ namespace Api.Controllers
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<Guid>> Create(CreateNoteViewModel model) 
+		public async Task<ActionResult<Guid>> Create(CreateNoteViewModel model)
 		{
 			var command = mapper.Map<CreateNoteViewModel, CreateNoteCommand>(model);
 			command.UserId = UserId;
@@ -50,10 +56,11 @@ namespace Api.Controllers
 		[HttpPut]
 		public async Task<IActionResult> Update(UpdateNoteViewModel model)
 		{
+
 			var command = mapper.Map<UpdateNoteViewModel, UpdateNoteCommand>(model);
 			command.UserId = UserId;
 			await mediator.Send(command);
-			
+
 			return NoContent();
 		}
 
@@ -67,6 +74,7 @@ namespace Api.Controllers
 			};
 
 			var response = await mediator.Send(command);
+
 			return Ok(response);
 		}
 	}

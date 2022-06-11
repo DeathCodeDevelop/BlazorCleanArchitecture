@@ -1,0 +1,42 @@
+﻿@page "/grid"
+@using WebUI.Services;
+@using global::Data.ViewModels;
+@inject INoteService noteService;
+
+@code {
+    private IEnumerable<GetAllNoteViewModel>? notes = null;
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        notes = await noteService.GetAll();
+    }
+}
+
+@if (notes == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-light">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Title</th>
+                <th scope="col">Details</th>
+                <th scope="col">CreationDate</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var note in notes)
+            {
+                <tr>
+                    <td>@note.Id</td>
+                    <td>@note.Title</td>
+                    <td>@note.Details</td>
+                    <td>@note.CreationDate.ToShortDateString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

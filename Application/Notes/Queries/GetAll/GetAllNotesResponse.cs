@@ -1,8 +1,4 @@
-﻿using Application.Common.Mappings;
-using AutoMapper;
-using Domain.Entities;
-
-namespace Application.Notes.Queries.GetAll;
+﻿namespace Application.Notes.Queries.GetAll;
 
 public class GetAllNotesResponse
 {

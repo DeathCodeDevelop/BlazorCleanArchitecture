@@ -31,4 +31,3 @@ public class CreateNoteCommandHandler
 		return note.Id;
 	}
 }
-
