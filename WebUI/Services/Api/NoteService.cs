@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebUI.Services
+namespace WebUI.Services.Api
 {
 	public class NoteService : INoteService
 	{
@@ -37,5 +37,11 @@ namespace WebUI.Services
 			string? delete = "api/note/delete/" + guid.ToString();
 			return await httpClient.DeleteAsync(delete);
 		}
-	}
+
+        public async Task<GetAllNoteViewModel?> GetById(Guid guid)
+        {
+			string? getById = "api/note/GetById/" + guid.ToString();
+			return await httpClient.GetFromJsonAsync<GetAllNoteViewModel>(getById);
+		}
+    }
 }

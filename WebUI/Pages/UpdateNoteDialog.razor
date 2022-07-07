@@ -1,0 +1,28 @@
+﻿@using MudBlazor;
+@using global::Data.ViewModels;
+
+<MudDialog>
+    <TitleContent>
+        <div class="d-flex align-items-center">
+            <h4 class="m-0">Update Note</h4>
+        </div>
+    </TitleContent>
+    <DialogContent>
+        <MudTextField T="string" Label="Title" Variant="Variant.Outlined" @bind-Value="Model.Title" />
+        <MudTextField T="string" Label="Details" Variant="Variant.Outlined" Lines="5" @bind-Value="Model.Details" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="Submit" Class="btn-danger">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public UpdateNoteViewModel Model { get; set; } = new UpdateNoteViewModel();
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(Model));
+    void Cancel() => MudDialog.Cancel();
+}
+
