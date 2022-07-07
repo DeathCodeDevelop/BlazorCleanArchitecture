@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using WebUI.Services.Api;
+using MudBlazor.Services;
+using MudBlazor.Dialog;
 using WebUI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +14,8 @@ builder.Services.AddHttpClient<INoteService, NoteService>(client =>
 {
 	client.BaseAddress = new Uri("http://localhost:5200/");
 });
+builder.Services.AddMudServices();
+builder.Services.AddScoped<IMyDialogService, MyDialogService>();
 
 var app = builder.Build();
 

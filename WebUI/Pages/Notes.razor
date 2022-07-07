@@ -1,0 +1,112 @@
+﻿@page "/notes"
+@using MudBlazor
+@using WebUI.Services.Api;
+@using WebUI.Services;
+@using global::Data.ViewModels;
+@using MudBlazor.Dialog
+@inject INoteService noteService;
+@inject IJSRuntime JsRuntime;
+@inject IMyDialogService DialogService;
+
+@code {
+    private IList<GetAllNoteViewModel> notes = new List<GetAllNoteViewModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var result = await noteService.GetAll();
+
+        if (result != null)
+            notes = result.ToList();
+    }
+
+    private async Task DeleteNote(GetAllNoteViewModel item)
+    {
+        var dialogResult = await DialogService.Confirm("Are you want to delete the note?");
+
+        if (dialogResult)
+        {
+            var result = await noteService.Delete(item.Id);
+            notes.Remove(item);
+        }
+    }
+
+    private async Task CreateNote()
+    {
+        var dialogResult = await DialogService.Create<CreateNoteViewModel>(typeof(CreateNoteDialog));
+
+        if (dialogResult == null)
+            return;
+
+        var result = await noteService.Create(dialogResult);
+
+        if (result != Guid.Empty)
+        {
+            GetAllNoteViewModel? note = await noteService.GetById(result);
+
+            if (note != null)
+                notes.Add(note);
+        }
+    }
+
+    private async Task UpdateNote(GetAllNoteViewModel note)
+    {
+        var newNote = new UpdateNoteViewModel();
+        newNote.Id = note.Id;
+        newNote.Title = note.Title;
+        newNote.Details = note.Details;
+
+        var dialogResult = await DialogService.Update<UpdateNoteViewModel>(typeof(UpdateNoteDialog), newNote);
+
+        if (dialogResult == null)
+            return;
+
+        await noteService.Update(dialogResult);
+        var replace = await noteService.GetById(note.Id);
+
+        if (replace != null)
+            notes[notes.IndexOf(note)] = replace;
+    }
+}
+
+@if (notes == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <MudContainer>
+        <MudButton class="create-button" StartIcon="@Icons.Material.Filled.Add"
+               Variant="Variant.Filled" Color="Color.Success"
+               @onclick="CreateNote">Create Note</MudButton>
+
+        <MudGrid Spacing="2" Justify="Justify.FlexStart" Class="mt-5">
+            @foreach (var note in notes)
+            {
+                <MudItem>
+                    <MudCard Outlined="true">
+                        <MudCardContent>
+                            <MudText Typo="Typo.h5">@note.Title</MudText>
+                            <MudText Typo="Typo.body1">@note.Details</MudText>
+                        </MudCardContent>
+                        <MudCardActions class="justify-content-end">
+                            <div Class="w-100">
+                                <MudText Typo="Typo.caption">Created : @note.CreationDate.ToString()</MudText>
+                                @if (@note.EditDate != null)
+                                {
+                                    <MudText Typo="Typo.caption">Edit : @note.EditDate.ToString()</MudText>
+                                }
+                            </div>
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Info" 
+                                class="mr-2" @onclick="@(args => UpdateNote(note))">
+                                </MudIconButton>
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error" 
+                                @onclick="@(args => DeleteNote(note))">
+                                </MudIconButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
+            }
+        </MudGrid>
+    </MudContainer>
+}

@@ -29,7 +29,7 @@ namespace Api.Controllers
 			return NotFound(null);
 		}
 
-		[HttpGet]
+		[HttpGet("{id}")]
 		public async Task<ActionResult<GetNoteDetailsResponse>> GetById(Guid id)
 		{
 			var query = new GetNoteDetailsQuery()
