@@ -1,14 +1,8 @@
 ﻿using Data.ViewModels;
 using MudBlazor;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WebUI.Pages;
 
-namespace WebUI.Services
+namespace WebUI.Services.Helpers
 {
 	public class MyDialogService : IMyDialogService
 	{

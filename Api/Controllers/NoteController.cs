@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Api.Models;
 using Data.ViewModels;
 using Application.Common.Exceptions;
+using Application.Notes.Commands.DeleteAllNotes;
+using Application.Notes.Queries.Models;
 
 namespace Api.Controllers
 {
@@ -17,20 +19,20 @@ namespace Api.Controllers
 	public class NoteController : BaseController
 	{
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<GetAllNoteViewModel>>> GetAll()
+		public async Task<ActionResult<IEnumerable<NoteViewModel>>> GetAll()
 		{
 			var query = new GetAllNotesQuery() { UserId = UserId };
 
 			var response = await mediator.Send(query);
 
 			if (response != null)
-				return Ok(mapper.Map<IEnumerable<GetAllNotesResponse>, IEnumerable<GetAllNoteViewModel>>(response));
+				return Ok(mapper.Map<IEnumerable<NoteDTO>, IEnumerable<NoteViewModel>>(response));
 
 			return NotFound(null);
 		}
 
 		[HttpGet("{id}")]
-		public async Task<ActionResult<GetNoteDetailsResponse>> GetById(Guid id)
+		public async Task<ActionResult<NoteViewModel>> GetById(Guid id)
 		{
 			var query = new GetNoteDetailsQuery()
 			{
@@ -73,6 +75,15 @@ namespace Api.Controllers
 				UserId = UserId
 			};
 
+			var response = await mediator.Send(command);
+
+			return Ok(response);
+		}
+
+		[HttpDelete]
+		public async Task<ActionResult> DeleteAll()
+		{
+			var command = new DeleteAllNotesCommand() { UserId = UserId };
 			var response = await mediator.Send(command);
 
 			return Ok(response);

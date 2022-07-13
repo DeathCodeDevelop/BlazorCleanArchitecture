@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Application.Notes.Queries.Models;
 using AutoMapper;
 using Domain.Entities;
 using MediatR;
@@ -6,13 +7,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Notes.Queries.GetAll;
 
-public class GetAllNotesQuery : IRequest<IEnumerable<GetAllNotesResponse>>
+public class GetAllNotesQuery : IRequest<IEnumerable<NoteDTO>>
 {
 	public Guid UserId { get; set; }
 }
 
 internal class GetAllNotesQueryHandler
-	: IRequestHandler<GetAllNotesQuery, IEnumerable<GetAllNotesResponse>>
+	: IRequestHandler<GetAllNotesQuery, IEnumerable<NoteDTO>>
 {
 	private readonly IApplicationDbContext context;
 	private readonly IMapper mapper;
@@ -23,10 +24,10 @@ internal class GetAllNotesQueryHandler
 		this.mapper = mapper;
 	}
 
-	public async Task<IEnumerable<GetAllNotesResponse>> Handle(GetAllNotesQuery request, CancellationToken cancellationToken)
+	public async Task<IEnumerable<NoteDTO>> Handle(GetAllNotesQuery request, CancellationToken cancellationToken)
 	{
 		var entities = await context.Notes.Where(x => x.UserId == request.UserId).ToListAsync(cancellationToken);
-		return mapper.Map<IEnumerable<Note>, IEnumerable<GetAllNotesResponse>>(entities);
+		return mapper.Map<IEnumerable<Note>, IEnumerable<NoteDTO>>(entities);
 	}
 }
 
