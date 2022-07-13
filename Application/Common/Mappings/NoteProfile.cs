@@ -1,5 +1,6 @@
 ﻿using Application.Notes.Queries.GetAll;
 using Application.Notes.Queries.GetNoteDetails;
+using Application.Notes.Queries.Models;
 using AutoMapper;
 using Domain.Entities;
 using System;
@@ -14,7 +15,7 @@ namespace Application.Common.Mappings
 	{
 		public NoteProfile()
 		{
-			CreateMap<Note, GetAllNotesResponse>()
+			CreateMap<Note, NoteDTO>()
                 .ForMember(response => response.Id,
                     opt => opt.MapFrom(note => note.Id))
                 .ForMember(response => response.Title,
@@ -26,7 +27,7 @@ namespace Application.Common.Mappings
                 .ForMember(response => response.EditDate,
                     opt => opt.MapFrom(note => note.EditDate));
 
-			CreateMap<Note, GetNoteDetailsResponse>()
+			CreateMap<Note, NoteDTO>()
 				.ForMember(response => response.Id,
 					opt => opt.MapFrom(note => note.Id))
 				.ForMember(response => response.Title,
