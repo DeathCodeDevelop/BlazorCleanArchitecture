@@ -87,14 +87,5 @@ namespace Api.Controllers
 
 			return BadRequest();
 		}
-
-
-		[HttpPost]
-		public async Task<ActionResult> Logout(TokenRequest token)
-		{
-			await _signInManager.SignOutAsync();
-
-			return Ok();
-		}
 	}
 }
