@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebUI.Services.Api
+namespace WebUI.Services.Api.Interfaces
 {
 	public interface INoteService
 	{

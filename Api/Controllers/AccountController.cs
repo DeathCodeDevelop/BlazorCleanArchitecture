@@ -63,7 +63,7 @@ namespace Api.Controllers
 			};
 
 			if (result.Succeeded)
-				return GenerateToken(token);
+				return Ok(GenerateToken(token));
 
 			return BadRequest();
 		}
