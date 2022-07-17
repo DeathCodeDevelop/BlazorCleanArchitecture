@@ -3,6 +3,7 @@ using MediatR;
 using System.Reflection;
 using FluentValidation;
 using Application.Common.Behaviors;
+using Application.Interfaces.Services;
 
 namespace Application;
 

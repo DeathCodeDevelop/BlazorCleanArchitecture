@@ -42,6 +42,9 @@ namespace Api.Middleware
 				case NotFoundException:
 					code = HttpStatusCode.NotFound;
 					break;
+				default:
+					code = HttpStatusCode.InternalServerError;
+					break;
 			}
 
 			context.Response.ContentType = "application/json";

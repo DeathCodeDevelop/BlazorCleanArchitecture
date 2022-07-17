@@ -14,11 +14,12 @@ namespace WebUI.Services.Api
 		public NoteService(HttpClient httpClient)
 		{
 			this.httpClient = httpClient;
+			this.httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImQ1ODNjMTlkLThhMTUtNDNjOC04ZjU1LTZmZWM3OWNiZWI1ZiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJzdHJpbmciLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJzdHJpbmciLCJleHAiOjE2NTc5MzM5NDgsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjUyMDAvIiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTIwMC8ifQ.x1DEHOVtBwEDxLCrRsY6jj7XHb7rqDXroxWg9GpfwE8");
 		}
 
 		public async Task<Guid> Create(CreateNoteViewModel model)
 		{
-			using var response = await httpClient.PostAsJsonAsync("api/note/create", model);
+			var response = await httpClient.PostAsJsonAsync("api/note/create", model);
 			return await response.Content.ReadFromJsonAsync<Guid>();
 		}
 
