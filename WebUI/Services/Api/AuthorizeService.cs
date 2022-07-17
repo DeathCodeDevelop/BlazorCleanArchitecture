@@ -42,7 +42,11 @@ namespace WebUI.Services.Api
 		public async Task<string?> GetTokenAsync(LoginViewModel model) 
 		{
 			var response = await _httpClient.PostAsJsonAsync("api/account/login/", model);
-			return await response.Content.ReadAsStringAsync();
+			
+			if(response.IsSuccessStatusCode)
+				return await response.Content.ReadAsStringAsync();
+
+			return null;
 		}
 
 		public async Task LogoutAsync()
@@ -55,7 +59,7 @@ namespace WebUI.Services.Api
 		{
 			var response = await _httpClient.PostAsJsonAsync("api/account/register/", model);
 
-			if (response.IsSuccessStatusCode) 
+			if (response.IsSuccessStatusCode)
 			{
 				var login = new LoginViewModel()
 				{

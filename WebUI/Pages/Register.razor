@@ -6,8 +6,15 @@
 <MudGrid Spacing="2" Justify="Justify.Center" Class="mt-3" Row="true">
     <MudItem xl="5" lg="5" md="6" sm="8" xs="12">
         <h3 class="text-center mb-5">Register</h3>
-        <MudTextField T="string" Label="UserName" Variant="Variant.Outlined" @bind-Value="@model.UserName" />
-        <MudTextField T="string" Label="Password" Variant="Variant.Outlined" @bind-Value="@model.Password" />
+        <MudTextField T="string" Label="Username" Variant="Variant.Outlined" @bind-Value="@model.UserName" />
+        
+        <MudTextField T="string" Label="Password" Variant="Variant.Outlined" InputType="@PasswordInput" 
+            @bind-Value="@model.Password" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" 
+            OnAdornmentClick="ShowPassword" AdornmentAriaLabel="Show Password" />
+        <MudTextField T="string" Label="Confirm Password" Variant="Variant.Outlined" InputType="@PasswordInput" 
+            @bind-Value="@model.ConfirmPassword" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" 
+            OnAdornmentClick="ShowPassword" AdornmentAriaLabel="Show Password" />
+        
         <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="Submit" Class="mt-5" FullWidth="true">Ok</MudButton>
         <MudLink Color="Color.Inherit" Class="mt-3 d-flex justify-content-center" Href="login">I have account</MudLink>
     </MudItem>
@@ -22,5 +29,24 @@
 
         if (result)
             NavManager.NavigateTo("");
+    }
+
+    bool isShow;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    void ShowPassword()
+    {
+        @if (isShow)
+        {
+            isShow = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else {
+            isShow = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
     }
 }
