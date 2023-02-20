@@ -1,6 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using WebUI.Services.Helpers.Interfaces
 @inherits LayoutComponentBase
-@inject ProtectedLocalStorage LocalStorage;
+@inject IAuthorizeService authorizeService;
+@inject NavigationManager navManager;
+@inject ITheameService theameService;
 
 <MudThemeProvider IsDarkMode="@TheameDark" />
 <MudDialogProvider />
@@ -8,19 +11,20 @@
 
 <MudLayout>
     <MudAppBar>
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
         <MudSpacer />
         <MudToggleIconButton @bind-Toggled="@TheameDark"
                              Icon="@Icons.Material.Outlined.DarkMode" Color="Color.Inherit" Title="Off"
                              ToggledIcon="@Icons.Material.Outlined.LightMode" ToggledColor="Color.Inherit" ToggledTitle="On" />
         <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Link="https://github.com/DeathCodeDevelop/BlazorCleanArchitecture/" Target="_blank" />
+        <AuthorizeView>
+            <Authorized>
+                <MudIconButton Icon="@Icons.Filled.Logout" Color="Color.Inherit" Target="_blank" OnClick="authorizeService.LogoutAsync"/>
+            </Authorized>
+             <NotAuthorized>
+                <MudIconButton Icon="@Icons.Filled.Login" Color="Color.Inherit" Target="_blank" OnClick="GoToLogin"/>
+            </NotAuthorized>
+        </AuthorizeView>
     </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
-        <MudDrawerHeader>
-            <MudText Typo="Typo.h6">Blazor Notes</MudText>
-        </MudDrawerHeader>
-        <NavMenu />
-    </MudDrawer>
     <MudMainContent>
         <MudContainer MaxWidth="MaxWidth.Large" Class="my-4">
             @Body
@@ -29,12 +33,14 @@
 </MudLayout>
 
 @code {
-    bool _drawerOpen = true;
+    //bool _drawerOpen = true;
 
-    void DrawerToggle()
-    {
-        _drawerOpen = !_drawerOpen;
-    }
+    //void DrawerToggle()
+    //{
+    //    _drawerOpen = !_drawerOpen;
+    //}
 
     public bool TheameDark { get; set; }
+
+    public void GoToLogin() => navManager.NavigateTo("login");
 }

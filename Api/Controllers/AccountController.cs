@@ -63,42 +63,29 @@ namespace Api.Controllers
 			};
 
 			if (result.Succeeded)
-				return GenerateToken(token);
+				return Ok(GenerateToken(token));
 
 			return BadRequest();
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<string>> Register(RegisterViewModel model)
+		public async Task<ActionResult> Register(RegisterViewModel model)
 		{
-			var appUser = new ApplicationUser { UserName = model.UserName };
+			if (model.Password != model.ConfirmPassword)
+				return BadRequest("Passwords do not match");
 
+			var user = await _userManager.FindByNameAsync(model.UserName);
+
+			if(user != null)
+				return BadRequest("User with name already register");
+
+			var appUser = new ApplicationUser { UserName = model.UserName };
 			var result = await _userManager.CreateAsync(appUser, model.Password);
 
 			if (result.Succeeded)
-			{
-				//var user = await _userManager.FindByNameAsync(model.UserName);
-
-				//var token = new TokenRequest()
-				//{
-				//	Id = user.Id,
-				//	Username = user.UserName,
-				//};
-
-				//return GenerateToken(token);
 				return Ok();
-			}
 
 			return BadRequest();
-		}
-
-
-		[HttpPost]
-		public async Task<ActionResult> Logout(TokenRequest token)
-		{
-			await _signInManager.SignOutAsync();
-
-			return Ok();
 		}
 	}
 }
