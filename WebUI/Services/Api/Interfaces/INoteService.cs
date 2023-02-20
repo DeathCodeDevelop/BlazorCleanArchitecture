@@ -5,14 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebUI.Services.Api
+namespace WebUI.Services.Api.Interfaces
 {
 	public interface INoteService
 	{
-		Task<IEnumerable<GetAllNoteViewModel>?> GetAll();
+		Task<IEnumerable<NoteViewModel>?> GetAll();
 		Task<Guid> Create(CreateNoteViewModel model);
 		Task<HttpResponseMessage> Update(UpdateNoteViewModel model);
-		Task<HttpResponseMessage> Delete(Guid guid);
-		Task<GetAllNoteViewModel?> GetById(Guid guid);
+		Task<HttpResponseMessage> Delete(Guid id);
+		Task<NoteViewModel?> GetById(Guid id);
+		Task<HttpResponseMessage> DeleteAll();
 	}
 }

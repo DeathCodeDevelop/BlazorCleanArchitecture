@@ -1,6 +1,6 @@
-﻿namespace Application.Notes.Queries.GetAll;
+﻿namespace Application.Notes.Queries.Models;
 
-public class GetAllNotesResponse
+public class NoteDTO
 {
 	public Guid Id { get; set; }
 	public string Title { get; set; }

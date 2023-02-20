@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 using Api.Models;
 using Data.ViewModels;
 using Application.Common.Exceptions;
+using Application.Notes.Commands.DeleteAllNotes;
+using Application.Notes.Queries.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api.Controllers
 {
@@ -17,36 +20,34 @@ namespace Api.Controllers
 	public class NoteController : BaseController
 	{
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<GetAllNoteViewModel>>> GetAll()
+		[Authorize]
+		public async Task<ActionResult<IEnumerable<NoteViewModel>>> GetAll()
 		{
-			var query = new GetAllNotesQuery() { UserId = UserId };
+			var query = new GetAllNotesQuery();
 
 			var response = await mediator.Send(query);
 
 			if (response != null)
-				return Ok(mapper.Map<IEnumerable<GetAllNotesResponse>, IEnumerable<GetAllNoteViewModel>>(response));
+				return Ok(mapper.Map<IEnumerable<NoteDTO>, IEnumerable<NoteViewModel>>(response));
 
 			return NotFound(null);
 		}
 
 		[HttpGet("{id}")]
-		public async Task<ActionResult<GetNoteDetailsResponse>> GetById(Guid id)
+		[Authorize]
+		public async Task<ActionResult<NoteViewModel>> GetById(Guid id)
 		{
-			var query = new GetNoteDetailsQuery()
-			{
-				Id = id,
-				UserId = UserId
-			};
+			var query = new GetNoteDetailsQuery() { Id = id };
 
 			var response = await mediator.Send(query);
 			return Ok(response);
 		}
 
 		[HttpPost]
+		[Authorize]
 		public async Task<ActionResult<Guid>> Create(CreateNoteViewModel model)
 		{
 			var command = mapper.Map<CreateNoteViewModel, CreateNoteCommand>(model);
-			command.UserId = UserId;
 
 			var response = await mediator.Send(command);
 			return Ok(response);
@@ -54,25 +55,32 @@ namespace Api.Controllers
 
 
 		[HttpPut]
+		[Authorize]
 		public async Task<IActionResult> Update(UpdateNoteViewModel model)
 		{
 
 			var command = mapper.Map<UpdateNoteViewModel, UpdateNoteCommand>(model);
-			command.UserId = UserId;
 			await mediator.Send(command);
 
 			return NoContent();
 		}
 
 		[HttpDelete("{id}")]
+		[Authorize]
 		public async Task<ActionResult<Guid>> Delete(Guid id)
 		{
-			var command = new DeleteNoteCommand()
-			{
-				Id = id,
-				UserId = UserId
-			};
+			var command = new DeleteNoteCommand() { Id = id };
 
+			var response = await mediator.Send(command);
+
+			return Ok(response);
+		}
+
+		[HttpDelete]
+		[Authorize]
+		public async Task<ActionResult> DeleteAll()
+		{
+			var command = new DeleteAllNotesCommand();
 			var response = await mediator.Send(command);
 
 			return Ok(response);

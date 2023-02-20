@@ -1,10 +1,6 @@
-﻿using Application.Common.Mappings;
-using AutoMapper;
-using Domain.Entities;
+﻿namespace Data.ViewModels;
 
-namespace Application.Notes.Queries.GetNoteDetails;
-
-public class GetNoteDetailsResponse
+public class NoteViewModel
 {
 	public Guid Id { get; set; }
 	public string Title { get; set; }
